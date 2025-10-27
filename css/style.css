@@ -83,6 +83,33 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+body {
+  background-color:#000000;
+  color:#FFFFFF;
+}
+.avdela {
+  filter: invert(100%);
+}
+
+body {
+  background-image: url("/img/anotherdayatlibrary.jpg");
+  background-repeat: repeat-x top;
+  background-size: contain;
+  background-attachment: fixed;
+}
+
+main {
+  background-color: #000000;
+  color: #FFFFFF;
+  padding:30px;
+  margin:40px;
+}
+
+footer {
+  background-color: #FFFFFF;
+  color:#000000;
+}
+
 
 /* ==========================================================================
    Helper classes
