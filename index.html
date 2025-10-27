@@ -6,17 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>End project: The interactive bookcase</title>
   <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="">
+  <meta name="description" content="The interactive library">
 
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-  <meta property="og:image:alt" content="">
-
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  <link rel="icon" type="image/png" href="img/icon.png" sizes="32x32">
 
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#fafafa">
@@ -28,7 +21,26 @@
 <!-- MAIN CONTENT -->
 <main>
   <h1>The Interactive Bookcase</h1>
+  <div class="quote"><p>Did I request thee, Maker, from my clay To mould me man? Did I solicit thee From darkness to promote me?<br>--<em>Paradise Lost</em></div>
+  <p>Everything you didn't know you needed to know about books - the famous, the forgotten and the surprising. This month, we're diving into <em>Mary Woolstonecraft Shelley's</em> classic:
+  <strong>Frankenstein; or, The Modern Prometheus</strong> and some of the many novels it has inspired.</p>
+  <p>Written in 1818, the novel of Doctor Victor Frankenstein and his Creature has become a cornerstore of both the gothic novel and the science fiction genre.</p>
+  <p>With the interactive bookcase, you can learn about different editions and translations of this popular book - just ask your questions below.</p>
   <img src="img/BookmanOrnament7242.png" alt="Divider: Bookman Ornament 7247" height="90px" class="avdela">
+  </div>
+  <p></p>
+  <div class="in-form" id="input-frank">
+    <form>
+  <label for="withcover">With cover image</label> <input type="checkbox" id="withcover" name="withcover"><br>
+  <label for="ebook">Available as book</label> <input type="checkbox" id="ebook" name="ebook"><br>
+  <label for="author">All authors</label> <input type="checkbox" id="author" name="author">
+<p></p>
+      <input type="submit" id="pull-api" name="pull-api" value="Meet Frankenstein" class="pull-api-button">
+</form>
+</div>
+  <div class="out-form" id="output-frank">
+
+  </div>
 </main>
 
 <!-- FOOTER -->

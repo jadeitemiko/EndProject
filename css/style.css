@@ -83,33 +83,79 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+:root {
+  --main-box-primary:#42002E;
+  --main-box-contrast:#A85275;
+  --main-box-invert:#F2EAFE;
+  --second-box-primary:#46000D;
+  --second-box-contrast:#321003;
+  --second-box-invert:#A87265;
+  --darkest:#32001E;
+  --palest:#F2EAFE;
+}
+
 body {
-  background-color:#000000;
-  color:#FFFFFF;
+  background-color: var(--darkest);
+  color: var(--palest);
 }
 .avdela {
   filter: invert(100%);
 }
 
 body {
-  background-image: url("/img/anotherdayatlibrary.jpg");
-  background-repeat: repeat-x top;
+  background-image: url("/img/bg.jpg");
   background-size: contain;
   background-attachment: fixed;
+  margin: 0;
+  padding: 0;
 }
 
 main {
-  background-color: #000000;
-  color: #FFFFFF;
-  padding:30px;
-  margin:40px;
+  font-family: Calibri, "Trebuchet MS", sans-serif;
+  background-color: var(--main-box-primary);
+  color: var(--main-box-invert);
+  padding-left:40px;
+  padding-right:40px;
+  padding-bottom:25px;
+  padding-top:10px;
+  margin:20px;
+  border-width:2px;
+  border-color: var(--main-box-contrast);
+  border-style: double;
+}
+
+.quote {
+  font-family: "Calibri Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--main-box-contrast);
 }
 
 footer {
-  background-color: #FFFFFF;
-  color:#000000;
+  font-family: "Calibri Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.85rem;
+  background-color: var(--second-box-primary);
+  color: var(--second-box-invert);
+  width:100%;
+  text-align: center;
+  padding:0.1rem;
 }
 
+a {
+  color: inherit;
+}
+
+.pull-api-button {
+  border-width: 5px;
+  border-style: double;
+  border-radius:30% / 70%;
+  padding: 15px;
+  margin: 8px;
+  background-color: var(--main-box-contrast);
+  color: var(--darkest);
+  font-size: 1.1rem;
+  font-weight: bold;
+}
 
 /* ==========================================================================
    Helper classes
