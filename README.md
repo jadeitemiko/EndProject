@@ -11,6 +11,10 @@ https://commons.wikimedia.org/wiki/File:The_Grey_Story_Book_(1905)_drop_initial_
 https://commons.wikimedia.org/wiki/File:Die_Gartenlaube_(1897)_b_826.jpg
 
 
+---
+
+<label for="author">All authors</label> <input type="checkbox" id="author" name="author">
+
 https://commons.wikimedia.org/wiki/File:Windows_kan_inte_hitta.PNG
 windows fel
 
