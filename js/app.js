@@ -1,14 +1,19 @@
+// Importerar från separata filer från den nya filen
+import { showTimelinePopup } from './timeline.js';
+import { applyLanguageFilter, getLanguageFilterHTML } from './language.js';
 
 /*
 Globala variabler:
-allBooks - lagrar all hämtad bokdata
+allBooks - lagrar all hämtad bokdata (våra 369 pålitliga sökresultat)
 startUrl - bas-URL för API-anrop
 title - titel på "månadens bok", just nu Frankenstein
+subj = om månadens bok ger för många alternativ, hårdkoda in ytterligare filter, nu fiction
 */
 
 let allBooks = [];
 const startUrl = "https://openlibrary.org/search.json?title=";
-const title = "frankenstein" //månadens bok
+const title = "frankenstein"; //månadens bok
+const genre = "fiction"; //om månadens bok ger för många resultat, ytterligare filtrering på typ
 
 //återställ sökningen
 async function resetSearch() {
@@ -35,7 +40,7 @@ async function runTask() {
 
   //hämtar all data om vald titel från API
   async function fetchBook() {
-    let subj = "&subject=fiction";
+    let subj = `&subject=${genre}`
     let url = `${startUrl}${title}${subj}`;
     const maxPages = 5; //paginerar, hämtar maxPages * 100 böcker åt gången
     let fetchedBooks = []; // lokal array för att returnera
@@ -44,7 +49,8 @@ async function runTask() {
       let page = 1;
       let totalFound = Infinity; // initialt obegränsat
       while (page <= maxPages && fetchedBooks.length < totalFound) {
-        const res = await fetch(`${url}&offset=${(page-1)*100}`);
+        // Observera: Open Library använder 'offset' för paginering, inte 'page'.
+        const res = await fetch(`${url}&offset=${(page - 1) * 100}`);
         if (!res.ok) throw new Error(`Network error: ${res.status}`);
 
         //cache-funktion för att inte hämta i onödan vid filtreringar
@@ -73,11 +79,21 @@ async function runTask() {
   if (books.length === 0) return; // om inga böcker, stoppa här
 
   //kontrollera checkbox-sökning och filtrera
-  const withCover = document.getElementById('withcover').checked;
-  const ebook = document.getElementById('ebook').checked;
+  const withCover = document.getElementById('withcover')?.checked || false;
+  const ebook = document.getElementById('ebook')?.checked || false;
   let filtered = books;
   if (withCover) filtered = filtered.filter(b => b.cover_i);
   if (ebook) filtered = filtered.filter(b => b.has_fulltext);
+
+  // hämta containern Input + uppdatera efter första sökningen
+  const inputContainer = document.getElementById("input");
+  inputContainer.innerHTML = `
+      <form id="initial-search-form">
+          <label for="withcover">With cover image</label> <input type="checkbox" id="withcover" name="withcover" ${withCover ? 'checked' : ''}><br>
+          <label for="ebook">Available as e-book</label> <input type="checkbox" id="ebook" name="ebook" ${ebook ? 'checked' : ''}>
+          <p></p>
+      </form>
+    `;
 
   // hämta output-containern (div på index.html) och rensa den vid varje knapptryckning
   const output = document.getElementById("output");
@@ -85,18 +101,15 @@ async function runTask() {
 
   //visa hur många träffar totalt
   const countElement = document.createElement("p");
-  countElement.textContent = `Found ${filtered.length} titles with the subject "fiction"`;
-  output.appendChild(countElement);
+  countElement.textContent = `Your search returned ${filtered.length} titles within the subject .`;
 
   //formatering för de 10 första titlarna i lista
   const listHeading = document.createElement("h2");
   listHeading.textContent = "The first ten unique results:";
   listHeading.classList.add("list-heading");
-  output.appendChild(listHeading);
 
   const bookListContainer = document.createElement("ul");
   bookListContainer.classList.add("ten-titles-list");
-  output.appendChild(bookListContainer);
 
   //loop för att plocka fram de 10 första unika titlarna
   const seenTitles = new Set();
@@ -112,49 +125,83 @@ async function runTask() {
       //skapa nytt element för att visa listan
       const titleElement = document.createElement("li");
       titleElement.classList.add("ten-list-item");
-      titleElement.textContent = book.title;
+
+      // Hämta författarnamn dynamiskt från sökresultatet
+      const authorText = book.author_name ? ` (Author: ${book.author_name.join(', ')})` : '';
+
+      titleElement.textContent = book.title + authorText;
       bookListContainer.appendChild(titleElement);
       count++;
     }
   }
 
-  //byt ut formuläret till ett nytt, för förfinad sökning
-  const inputContainer = document.getElementById("input");
-  inputContainer.innerHTML = ''; // Rensa input-diven
+  //skapar layout som är 3 kolumner på stor skärm, 1 på liten
+  const mainLayout = document.createElement("div");
+  mainLayout.id = "resp-layout-box";
 
-  const newFormHTML = `
-        <form id="new-filter-form">
-            // YTTERLIGARE FILTRERING HÄR
-            <p></p>
-            <input type="submit" id="filter-results-btn" name="filter-results" value="Apply Filter" class="pull-api-button">
-        </form>
+  const bookListWrapper = document.createElement("div");
+  bookListWrapper.id = "book-results-column";
 
-        <input type="button" id="reset-api" value="Reset" class="smaller-button">
-    `;
-  inputContainer.innerHTML = newFormHTML;
+  // KOLUMN FÖR VIDARE FILTRERING
+  const filterWrapper = document.createElement("div");
+  filterWrapper.id = "filter-column";
 
-  //återställ alla lyssnare/knappar
+  //knapp för popup tidslinje av intressanta utgåvor med omslag
+  const timelineButton = document.createElement('button');
+  timelineButton.className = 'big-button';
+  timelineButton.textContent = 'Show timeline';
+  timelineButton.id = 'show-timeline-btn';
+  timelineButton.type = 'button'; // SE TILL ATT KNAPPEN INTE SUBMITTAR
+
+  // LÄGGER TILL TIDS-LINJE KNAPPEN OCH DESS LYSSNARE HÄR
+  timelineButton.addEventListener('click', showTimelinePopup);
+
+  //hämtar språk-filen
+  const filterForm = document.createElement('form');
+  filterForm.id = 'new-filter-form';
+  filterForm.innerHTML = getLanguageFilterHTML();
+
+  // 2. Lägg till TIDS-LINJE KNAPPEN och FORMULÄRET i filterWrapper (i den ordningen)
+  filterWrapper.appendChild(timelineButton);
+  filterWrapper.appendChild(filterForm);
+
+  //skapar lyssnare för språkfiltret
+  const languageFilterBtn = document.getElementById('filter-results-btn');
+  if (languageFilterBtn) {
+    languageFilterBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      applyLanguageFilter(allBooks);
+    });
+  }
+
+  const resetWrapper = document.createElement("div");
+  resetWrapper.id = "reset-column";
+  resetWrapper.innerHTML = `<p>Reset your search, if you want to start over from the beginning!</p>
+    <input type="button" id="reset-api" value="Redo search" class="smaller-button">`;
+
+  //lägg till kolumner i mainLayout
+  bookListWrapper.appendChild(countElement);
+  bookListWrapper.appendChild(listHeading);
+  bookListWrapper.appendChild(bookListContainer);
+  mainLayout.appendChild(bookListWrapper);
+  mainLayout.appendChild(filterWrapper);
+  mainLayout.appendChild(resetWrapper);
+
+  output.appendChild(mainLayout);
+
+  //återställ alla lyssnare/knappar (filterBtn och resetBtn)
   setEventListeners();
 }
 
 //setEventListeners skapar lyssnare som reagerar på input från DOM t.ex. (Meet Frankenstein)
 function setEventListeners() {
 
-  // första sökningen (enda som syns vid start)
+  // hämtning från API som initieras via knapptryckning
   const pullApiBtn = document.getElementById('pull-api');
   if (pullApiBtn) {
     pullApiBtn.addEventListener('click', async (event) => {
       event.preventDefault();
       await runTask();
-    });
-  }
-
-  //vidare filtrering av redan hämtat resultat
-  const filterBtn = document.getElementById('filter-results-btn');
-  if (filterBtn) {
-    filterBtn.addEventListener('click', async (event) => {
-      event.preventDefault();
-      await runTask(); // Kör huvudlogiken, men nu med nya filter!
     });
   }
 
@@ -164,6 +211,13 @@ function setEventListeners() {
     resetBtn.addEventListener('click', async () => {
       await resetSearch(); // Kör återställningslogiken
     });
+  }
+
+  // ladda knapp för att kolla tidslinjen
+  const timelineButton = document.getElementById('show-timeline-btn');
+  if (timelineButton) {
+    // skicka allBooks info till tidslinje-relaterad kod
+    timelineButton.addEventListener('click', () => showTimelinePopup(allBooks));
   }
 }
 
