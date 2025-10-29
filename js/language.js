@@ -1,12 +1,16 @@
 //filtrera på språk
 
-// Språklista, alternativen kollade via konsolen
+// Språklista, alternativen kollade via konsolen - Svenska borttaget och Engelska borttaget.
 const LANGUAGES = [
-  { code: 'eng', name: 'English' },
-  { code: 'swe', name: 'Swedish' },
   { code: 'ger', name: 'German' },
   { code: 'fre', name: 'French' },
   { code: 'spa', name: 'Spanish' },
+];
+
+//exkludera engelska titlar, då OL prioriterar dem framför översatta verk
+const ORIGINAL_ENGLISH_TITLES = [
+  "Frankenstein or The Modern Prometheus",
+  "Frankenstein; or, The Modern Prometheus"
 ];
 
 // html för språk
@@ -31,27 +35,31 @@ export function getLanguageFilterHTML() {
 
 // filtrera cachade datan i allBooks utifrån valt språk, mata ut max 5 resultat.
 export function applyLanguageFilter(allBooks) {
-  console.log("--- applyLanguageFilter START ---");
   const languageSelect = document.getElementById('language-select');
   const selectedLang = languageSelect.value;
-  console.log("Selected Language:", selectedLang);
   const outputContainer = document.getElementById('language-filter-output');
-  if (!outputContainer) { // NYTT: 3. Kan vi hitta output-containern?
+
+  if (!outputContainer) {
     console.error("ERROR: Could not find element #language-filter-output");
     return;
   }
+
   outputContainer.innerHTML = ''; // Rensa föregående resultat
 
   if (!selectedLang) {
-    // Endast ren p-tagg utan stilklasser
     outputContainer.innerHTML = '<p>Choose a language</p>';
     return;
   }
 
-  // Ingen säkerhetskontroll: Kraschar om book.language inte är en array eller är null/undefined
-  const filteredBooks = allBooks.filter(book =>
-    book.language.includes(selectedLang)
-  );
+  // kraschsäkring - förhindrar tyst krasch vid osäker API-data
+  const filteredBooks = allBooks.filter(book => {
+    // returnera false om book.language inte är korrekt definierad som array
+    if (!Array.isArray(book.language)) {
+      return false;
+    }
+    //filtrera ut de som har språk
+    return book.language.includes(selectedLang);
+  });
 
   //visa bara unika resultat, max 5 för att inte förstöra layouten
   const uniqueTitles = new Set();
@@ -59,10 +67,15 @@ export function applyLanguageFilter(allBooks) {
 
   for (const book of filteredBooks) {
     if (uniqueTitles.size >= 5) break;
+
+    //ignorera eng originaltiteln
+    if (ORIGINAL_ENGLISH_TITLES.includes(book.title)) {
+      continue;
+    }
+
     if (!uniqueTitles.has(book.title)) {
       uniqueTitles.add(book.title);
 
-      // Ingen säkerhetskontroll: Kraschar/ger undefined om book.author_name saknas/är tom
       const author = book.author_name[0];
 
       results.push({
@@ -86,8 +99,7 @@ export function applyLanguageFilter(allBooks) {
 
     outputContainer.appendChild(resultList);
   } else {
-    // Endast ren p-tagg utan stilklasser
+    //om saknas 
     outputContainer.innerHTML = '<p>No results found for chosen language.</p>';
   }
-  console.log("Results found:", results.length);
 }

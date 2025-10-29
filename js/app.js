@@ -151,10 +151,7 @@ async function runTask() {
   timelineButton.className = 'big-button';
   timelineButton.textContent = 'Show timeline';
   timelineButton.id = 'show-timeline-btn';
-  timelineButton.type = 'button'; // SE TILL ATT KNAPPEN INTE SUBMITTAR
-
-  // LÄGGER TILL TIDS-LINJE KNAPPEN OCH DESS LYSSNARE HÄR
-  timelineButton.addEventListener('click', showTimelinePopup);
+  timelineButton.type = 'button';
 
   //hämtar språk-filen
   const filterForm = document.createElement('form');
@@ -164,15 +161,6 @@ async function runTask() {
   // 2. Lägg till TIDS-LINJE KNAPPEN och FORMULÄRET i filterWrapper (i den ordningen)
   filterWrapper.appendChild(timelineButton);
   filterWrapper.appendChild(filterForm);
-
-  //skapar lyssnare för språkfiltret
-  const languageFilterBtn = document.getElementById('filter-results-btn');
-  if (languageFilterBtn) {
-    languageFilterBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      applyLanguageFilter(allBooks);
-    });
-  }
 
   const resetWrapper = document.createElement("div");
   resetWrapper.id = "reset-column";
@@ -187,7 +175,7 @@ async function runTask() {
   mainLayout.appendChild(filterWrapper);
   mainLayout.appendChild(resetWrapper);
 
-  output.appendChild(mainLayout);
+  output.appendChild(mainLayout); //aktivera knapparna ovan
 
   //återställ alla lyssnare/knappar (filterBtn och resetBtn)
   setEventListeners();
@@ -216,8 +204,19 @@ function setEventListeners() {
   // ladda knapp för att kolla tidslinjen
   const timelineButton = document.getElementById('show-timeline-btn');
   if (timelineButton) {
-    // skicka allBooks info till tidslinje-relaterad kod
+    //showTimelinePopup tar hand om allBooks-kontrollen
     timelineButton.addEventListener('click', () => showTimelinePopup(allBooks));
+  }
+
+  //lyssnare för språkfilter
+  const languageFilterBtn = document.getElementById('filter-results-btn');
+  if (languageFilterBtn) {
+    languageFilterBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Om du ser denna i konsolen, vet vi att klicket fungerar!
+      console.log("Klick på språkfilter FÅNGAT!");
+      applyLanguageFilter(allBooks);
+    });
   }
 }
 
