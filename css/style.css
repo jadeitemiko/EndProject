@@ -2,7 +2,7 @@
 Ordning på CSS
 0. sparat från boilerplate
 1. Färger
-2. Grundelement (body, länkar, avdelare, footer)
+2. Grundelement (body, länkar, bilder, footer)
 3. Dynamiska element: Main + js-anslutet
 4. Skärmstorlek
 5. Popup m tidslinje
@@ -41,6 +41,7 @@ video {
   --shadow-rgb: 30, 30, 30;
   --shadow-opacity: 0.5;
   --shadow: 0 4px 8px rgba(var(--shadow-rgb), var(--shadow-opacity));
+  --main-box-contrast-rgb: 168, 82, 117;
 }
 
 /* GRUNDELEMENT */
@@ -70,8 +71,27 @@ a:hover {
 
 .avdela { /* dekorativ text-avdelare, svartvit bild */
   filter: invert(100%);
+  height: 90px;
+  width: auto;
+  display: block;
+  margin: 15px auto;
 }
 
+/* när bilden visas i en av kolumnerna */
+#filter-column .avdela {
+  height: 45px;
+  margin: 10px auto;
+}
+
+/*när visa omslagsbild*/
+.cover-image {
+  max-width: 90%;
+  height: auto;
+  display: block;
+  border: 1px solid var(--main-box-contrast);
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .quote {
   font-family: "Calibri Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 1.1rem;
@@ -135,14 +155,6 @@ main {
   color: var(--second-box-invert);
   font-size: 0.8rem;
 }
-
-/* klasser som skapas via js
-.book-title {
-}
-
-.list-heading {
-}
-*/
 
 .ten-titles-list {
   display: flex;

@@ -33,7 +33,7 @@ export function handleShowTitle(e) {
   // Nollställ utdata
   outputContainer.innerHTML = '';
 
-  const maxCount = CACHED_BOOKS.length;
+  const maxCount = cached_books.length;
 
   // Hämta och rensa input
   const inputValue = inputElement.value;
@@ -42,7 +42,6 @@ export function handleShowTitle(e) {
   // 2. Validering
   if (isNaN(index) || index < 1 || index > maxCount || !Number.isInteger(parseFloat(inputValue))) {
     outputContainer.innerHTML = `<p>Invalid entry. Add a whole number between 1 and ${maxCount}.</p>`;
-    // Inget klassbyte här för felindikering, då vi undviker nya CSS-klasser.
     return;
   }
 
@@ -54,17 +53,32 @@ export function handleShowTitle(e) {
     return;
   }
 
-  // 4. Visa nycklar
+  // 4. Extrahera data
   const title = book.title || 'Missing title';
-  const workKey = book.key || 'Missing Work Key (/works/OL...W)';
-  const coverEditionKey = book.cover_edition_key || 'Missing cover edition key';
 
-  // fippla lite med CSS här om vill ha snyggare
+  // Hämta författarnamn säkert
+  const authorName = book.author_name ? book.author_name[0] : 'Unknown Author';
+
+  const coverEditionKey = book.cover_edition_key;
+
+  // Skapa omslags-URL (Medium storlek) och HTML
+  let coverHtml = '';
+  if (coverEditionKey) {
+    const coverUrl = `https://covers.openlibrary.org/b/olid/${coverEditionKey}-M.jpg`;
+
+    // Använder den nya, existerande CSS-klassen 'cover-image'
+    coverHtml = `<img src="${coverUrl}" alt="Omslag för ${title}" class="cover-image">`;
+  } else {
+    coverHtml = '<p>No book cover found for this edition.</p>';
+  }
+
+
+  // 5. Visa output
   outputContainer.innerHTML = `
         <div>
-            <h4>${index}. ${title}</h4>
-            <p><strong>Work Key:</strong> ${workKey}</p>
-            <p><strong>Edition Key:</strong> ${coverEditionKey}</p>
+            <h4 style="font-weight: bold;">${index}. ${title}</h4>
+            <p><strong>Author:</strong> ${authorName}</p>
+            ${coverHtml}
         </div>
     `;
 }

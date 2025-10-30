@@ -1,6 +1,8 @@
 // Importerar språk- och popupfunktioner från separata filer
 import { showTimelinePopup } from './timeline.js';
 import { applyLanguageFilter, getLanguageFilterHTML } from './language.js';
+// Importerar funktioner för att visa en enstaka titel och initialisera datan
+import { initializeShowTitle, getShowTitleHTML, handleShowTitle } from './showtitle.js';
 
 /*
 Globala variabler:
@@ -86,6 +88,9 @@ async function runTask() {
   if (withCover) filtered = filtered.filter(b => b.cover_i);
   if (ebook) filtered = filtered.filter(b => b.has_fulltext);
 
+  // Initialisera den nya showtitle-modulen med den filtrerade datan
+  initializeShowTitle(filtered);
+
   // hämta containern Input + uppdatera efter första sökningen
   const inputContainer = document.getElementById("input");
   inputContainer.innerHTML = `
@@ -148,6 +153,10 @@ async function runTask() {
   const filterCol = document.createElement("div");
   filterCol.id = "filter-column";
 
+  // Ladda in HTML för index-sökningen och lägg till i filterCol
+  const showTitleForm = document.createElement('div');
+  showTitleForm.innerHTML = getShowTitleHTML();
+
   //knapp för popup tidslinje av intressanta utgåvor med omslag
   const timelineButton = document.createElement('button');
   timelineButton.className = 'big-button';
@@ -160,7 +169,8 @@ async function runTask() {
   filterForm.id = 'new-filter-form';
   filterForm.innerHTML = getLanguageFilterHTML();
 
-  // lägger in tidslinje-knapp + språkformulär i filtreringskolumnen
+  // lägger in index-sökningen, tidslinje-knapp + språkformulär i filtreringskolumnen
+  filterCol.appendChild(showTitleForm); // Nytt formulär överst
   filterCol.appendChild(timelineButton);
   filterCol.appendChild(filterForm);
 
@@ -210,6 +220,13 @@ function setEventListeners() {
     //showTimelinePopup tar hand om allBooks-kontrollen
     timelineButton.addEventListener('click', () => showTimelinePopup(allBooks));
   }
+
+  // Lyssnare för sökning av enskild titel via index
+  const showTitleButton = document.getElementById('show-title-btn');
+  if (showTitleButton) {
+    showTitleButton.addEventListener('click', handleShowTitle);
+  }
+
 
   //lyssnare för språkfilter
   const languageFilterBtn = document.getElementById('filter-results-btn');
