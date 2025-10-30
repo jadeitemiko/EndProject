@@ -14,9 +14,11 @@ export function getShowTitleHTML() {
   const maxVal = maxBooksCount;
 
   return `
+        <h3>Lookup a title</h3>
         <p>Want to look closer at our results? Enter a number no larger than our search result to look up details and book cover (if it exists)</p>
         <div>
             <input type="number" id="book-index-input" placeholder="Enter number between 1 and ${maxVal}" min="1" max="${maxVal}" value="1"/>
+            <br>
             <button type="button" id="show-title-btn" class="smaller-button">
             Lookup
             </button>

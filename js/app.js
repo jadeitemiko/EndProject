@@ -1,7 +1,8 @@
-// Importerar språk- och popupfunktioner från separata filer
+// Importerar tidslinje som popup
 import { showTimelinePopup } from './timeline.js';
+//importerar språkfilter
 import { applyLanguageFilter, getLanguageFilterHTML } from './language.js';
-// Importerar funktioner för att visa en enstaka titel och initialisera datan
+// Importerar funktioner för att visa en enstaka titel utifrån nummervärde
 import { initializeShowTitle, getShowTitleHTML, handleShowTitle } from './showtitle.js';
 
 /*
@@ -173,7 +174,7 @@ async function runTask() {
 
   // lägger in index-sökningen, tidslinje-knapp + språkformulär i filtreringskolumnen
   filterCol.appendChild(showTitleForm);
-  filterCol.insertAdjacentHTML('beforeend', dividerHtml); //avdelare 
+  filterCol.insertAdjacentHTML('beforeend', dividerHtml); //avdelare
   filterCol.appendChild(timelineButton);
   filterCol.insertAdjacentHTML('beforeend', dividerHtml); //avdelare
   filterCol.appendChild(filterForm);

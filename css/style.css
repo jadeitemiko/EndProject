@@ -126,6 +126,10 @@ main {
   border-style: double;
 }
 
+h1, h2 {
+  font-family: Calibri, "Trebuchet MS", sans-serif;
+}
+
 #output {
   margin-top: 20px;
   padding: 20px;
@@ -318,6 +322,25 @@ POPUP
   cursor: pointer;
 }
 
+.timeline-style {
+  font-family: "Calibri Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.1em;
+  color: var(--main-box-invert);
+}
+
+.timeline-style.obs {
+  font-family: Calibri, Helvetica, sans-serif;
+  font-weight: bolder;
+  color: var(--palest);
+}
+
+.timeline-heading {
+  font-style: italic;
+  font-weight: bolder;
+  font-size: 1.5rem;
+  color: var(--second-box-invert);
+}
+
 .timeline-entry {
   display: flex;
   align-items: flex-start;
@@ -333,16 +356,4 @@ POPUP
   height: auto;
   border: 1px solid var(--main-box-contrast);
   box-shadow: var(--shadow);
-}
-
-.timeline-info h3 {
-  margin-top: 0;
-  color: var(--main-box-contrast);
-}
-
-.timeline-note {
-  font-style: italic;
-  color: var(--second-box-invert);
-  font-size: 0.9em;
-  margin-top: 5px;
 }

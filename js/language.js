@@ -21,6 +21,7 @@ export function getLanguageFilterHTML() {
   ).join('');
 
   return `
+        <h3>Language filter</h3>
         <p>Filter your search according to language. Note: If a title has been translated, you will still see the English name in the search, but a translation to your language exists.</p>
         <div>
             <select id="language-select" name="language">

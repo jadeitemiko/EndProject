@@ -8,7 +8,7 @@
 // Denna data är statisk och hör logiskt hemma i tidslinjemodulen.
 export const SELECTED_TIMELINE_BOOKS = [
   // cover_id_fallback: Korrekta Omslags-ID för externa bilder. Matchar troligen INTE i cache.
-  { olKey: '/works/OL450063W', yearPub: 1818, note: 'Original edition', cover_id_fallback: 15113302 },
+  { olKey: '/works/OL450063W', yearPub: 1818, note: 'The original edition', cover_id_fallback: 15113302 },
   { olKey: '/works/OL7141324W', yearPub: 1969, note: 'Psychidelic 60ies spinoff', cover_id_fallback: 1996606 },
   { olKey: '/works/OL892505W', yearPub: 1973, note: 'Science fiction spinoff', cover_id_fallback: 10037277 },
   { olKey: '/works/OL503317W', yearPub: 1990, note: 'New wave of spinoffs - or more scanned material?', cover_id_fallback: 3875774 },
@@ -90,7 +90,7 @@ function getDisplayAuthor(matchedBook) {
  */
 export async function loadTimelineContent(allBooks) {
   const container = document.getElementById('timeline-container');
-  container.innerHTML = 'Hämtar metadata från cachade sökresultat...';
+  container.innerHTML = 'Loading data...';
 
   // Skapa båda Map-strukturerna för snabb sökning
   const coverIdMap = createCoverIdMap(allBooks);
@@ -174,12 +174,10 @@ export async function loadTimelineContent(allBooks) {
     const info = document.createElement('div');
     info.className = 'timeline-info';
     info.innerHTML = `
-            <!-- ÅR OCH TITEL VISAS SEPARAT -->
-            <h3 class="timeline-year">${book.year}</h3>
-            <h4 class="timeline-title">${book.title}</h4>
-            <!-- FÖRFATTARE VISAS SEPARAT OM INTE FILTRERAD BORT ELLER TOM STRÄNG -->
-            ${book.author ? `<p class="timeline-author"><strong>Author:</strong> ${book.author}</p>` : ''}
-            <p class="timeline-note">${book.note}</p>
+            <h3 class="timeline-heading">${book.year}</h3>
+            <p class="timeline-style obs">${book.title}</p>
+            ${book.author ? `<p class="timeline-style">Author: ${book.author}</p>` : ''}
+            <p class="timeline-style">Comment: ${book.note}</p>
         `;
 
     entry.appendChild(imgElement);
@@ -197,7 +195,7 @@ export function showTimelinePopup(allBooks) {
   // Avbryt om allBooks inte har laddats än
   if (allBooks.length === 0) {
     const output = document.getElementById("output");
-    output.innerHTML = '<p class="text-red-500 font-bold p-4 bg-red-100 rounded-lg">Vänligen klicka "Meet Frankenstein" först för att ladda data innan tidslinjen kan visas.</p>';
+    output.innerHTML = '<p>Please click the button "Meet Frankenstein" first, to load data.</p>';
     return;
   }
 
