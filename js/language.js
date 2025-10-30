@@ -1,13 +1,14 @@
 //filtrera på språk
 
-// Språklista, alternativen kollade via konsolen - Svenska borttaget och Engelska borttaget.
+// Språklista, alternativen kollade via konsolen
 const LANGUAGES = [
   { code: 'ger', name: 'German' },
   { code: 'fre', name: 'French' },
   { code: 'spa', name: 'Spanish' },
 ];
 
-//exkludera engelska titlar, då OL prioriterar dem framför översatta verk
+//undvik att alltid ha originaltiteln först.
+//OL prioriterar engelska titlar
 const ORIGINAL_ENGLISH_TITLES = [
   "Frankenstein or The Modern Prometheus",
   "Frankenstein; or, The Modern Prometheus"
@@ -20,7 +21,7 @@ export function getLanguageFilterHTML() {
   ).join('');
 
   return `
-        <p>Filter titles according to language and see some of the available translations and editions</p>
+        <p>Filter your search according to language. Note: If a title has been translated, you will still see the English name in the search, but a translation to your language exists.</p>
         <div>
             <select id="language-select" name="language">
                 <option value="">Choose language</option>
@@ -99,7 +100,7 @@ export function applyLanguageFilter(allBooks) {
 
     outputContainer.appendChild(resultList);
   } else {
-    //om saknas 
+    //om saknas
     outputContainer.innerHTML = '<p>No results found for chosen language.</p>';
   }
 }

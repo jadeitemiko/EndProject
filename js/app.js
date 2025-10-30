@@ -1,4 +1,4 @@
-// Importerar från separata filer från den nya filen
+// Importerar språk- och popupfunktioner från separata filer
 import { showTimelinePopup } from './timeline.js';
 import { applyLanguageFilter, getLanguageFilterHTML } from './language.js';
 
@@ -49,7 +49,8 @@ async function runTask() {
       let page = 1;
       let totalFound = Infinity; // initialt obegränsat
       while (page <= maxPages && fetchedBooks.length < totalFound) {
-        // Observera: Open Library använder 'offset' för paginering, inte 'page'.
+
+        // OL använder 'offset' för paginering, inte 'page'.
         const res = await fetch(`${url}&offset=${(page - 1) * 100}`);
         if (!res.ok) throw new Error(`Network error: ${res.status}`);
 
@@ -105,7 +106,7 @@ async function runTask() {
 
   //formatering för de 10 första titlarna i lista
   const listHeading = document.createElement("h2");
-  listHeading.textContent = "The first ten unique results:";
+  listHeading.textContent = "The first ten unique titles:";
   listHeading.classList.add("list-heading");
 
   const bookListContainer = document.createElement("ul");
@@ -139,12 +140,13 @@ async function runTask() {
   const mainLayout = document.createElement("div");
   mainLayout.id = "resp-layout-box";
 
-  const bookListWrapper = document.createElement("div");
-  bookListWrapper.id = "book-results-column";
+  //skapar kolumn för topp-10 boklistan
+  const bookListCol = document.createElement("div");
+  bookListCol.id = "book-results-column";
 
-  // KOLUMN FÖR VIDARE FILTRERING
-  const filterWrapper = document.createElement("div");
-  filterWrapper.id = "filter-column";
+  // kolumnen för vidare filtrering, filterCol
+  const filterCol = document.createElement("div");
+  filterCol.id = "filter-column";
 
   //knapp för popup tidslinje av intressanta utgåvor med omslag
   const timelineButton = document.createElement('button');
@@ -158,22 +160,23 @@ async function runTask() {
   filterForm.id = 'new-filter-form';
   filterForm.innerHTML = getLanguageFilterHTML();
 
-  // 2. Lägg till TIDS-LINJE KNAPPEN och FORMULÄRET i filterWrapper (i den ordningen)
-  filterWrapper.appendChild(timelineButton);
-  filterWrapper.appendChild(filterForm);
+  // lägger in tidslinje-knapp + språkformulär i filtreringskolumnen
+  filterCol.appendChild(timelineButton);
+  filterCol.appendChild(filterForm);
 
-  const resetWrapper = document.createElement("div");
-  resetWrapper.id = "reset-column";
-  resetWrapper.innerHTML = `<p>Reset your search, if you want to start over from the beginning!</p>
+  //skapar återställningskolumnen
+  const resetCol = document.createElement("div");
+  resetCol.id = "reset-column";
+  resetCol.innerHTML = `<p>Reset your search, if you want to start over from the beginning!</p>
     <input type="button" id="reset-api" value="Redo search" class="smaller-button">`;
 
-  //lägg till kolumner i mainLayout
-  bookListWrapper.appendChild(countElement);
-  bookListWrapper.appendChild(listHeading);
-  bookListWrapper.appendChild(bookListContainer);
-  mainLayout.appendChild(bookListWrapper);
-  mainLayout.appendChild(filterWrapper);
-  mainLayout.appendChild(resetWrapper);
+  //lägg till alla kolumner i mainLayout
+  bookListCol.appendChild(countElement);
+  bookListCol.appendChild(listHeading);
+  bookListCol.appendChild(bookListContainer);
+  mainLayout.appendChild(bookListCol);
+  mainLayout.appendChild(filterCol);
+  mainLayout.appendChild(resetCol);
 
   output.appendChild(mainLayout); //aktivera knapparna ovan
 
@@ -213,8 +216,8 @@ function setEventListeners() {
   if (languageFilterBtn) {
     languageFilterBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      // Om du ser denna i konsolen, vet vi att klicket fungerar!
-      console.log("Klick på språkfilter FÅNGAT!");
+      // felkoll - funkar lyssnaren?
+      console.log("språkfilter fångat");
       applyLanguageFilter(allBooks);
     });
   }
