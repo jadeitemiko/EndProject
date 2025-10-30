@@ -13,7 +13,7 @@ subj = om månadens bok ger för många alternativ, hårdkoda in ytterligare fil
 let allBooks = [];
 const startUrl = "https://openlibrary.org/search.json?title=";
 const title = "frankenstein"; //månadens bok
-const genre = "fiction"; //om månadens bok ger för många resultat, ytterligare filtrering på typ
+const genre = "fiction";
 
 //återställ sökningen
 async function resetSearch() {

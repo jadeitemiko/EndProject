@@ -5,7 +5,7 @@
 const startUrl = "https://openlibrary.org/search.json?title=";
 const title = "frankenstein";
 const genre = "fiction";
-const languageToFilter = 'ger'; // Testa mot svenska
+const languageToFilter = 'se' // Testa mot svenska
 
 const MAX_PAGES = 5; // Begränsa till 500 böcker, som i app.js
 
@@ -58,7 +58,7 @@ async function fetchAllBooks() {
  * @param {Array} allBooks - All hämtad bokdata.
  */
 function applyLanguageFilterTest(allBooks) {
-  console.log("\n--- STARTAR FILTRERING PÅ SPRÅK: 'swe' ---");
+  console.log("\n--- STARTAR FILTRERING PÅ SPRÅK: ---");
 
   // Säker filtrering: Kontrollerar att book.language existerar och är en array.
   const filteredBooks = allBooks.filter(book => {
@@ -92,12 +92,12 @@ function applyLanguageFilterTest(allBooks) {
   console.log(`\nFILTRERING SLUTFÖRD. Hittade unika resultat: ${results.length}`);
 
   if (results.length > 0) {
-    console.log("--- Första 5 UNIKA TITLAR på SVENSKA ('swe') ---");
+    console.log("--- Första 5 UNIKA TITLAR ---");
     results.forEach((item, index) => {
       console.log(`${index + 1}. ${item.title} (av ${item.author})`);
     });
   } else {
-    console.log("Inga svenska ('swe') resultat hittades i den hämtade datan.");
+    console.log("Inga resultat på språket hittades i den hämtade datan.");
   }
   console.log("-------------------------------------------------");
 }
