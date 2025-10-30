@@ -153,6 +153,8 @@ async function runTask() {
   const filterCol = document.createElement("div");
   filterCol.id = "filter-column";
 
+  const dividerHtml = `<img src="img/BookmanOrnament7242.png" alt="Divider: Bookman Ornament 7247" class="avdela">`;
+
   // Ladda in HTML för index-sökningen och lägg till i filterCol
   const showTitleForm = document.createElement('div');
   showTitleForm.innerHTML = getShowTitleHTML();
@@ -170,8 +172,10 @@ async function runTask() {
   filterForm.innerHTML = getLanguageFilterHTML();
 
   // lägger in index-sökningen, tidslinje-knapp + språkformulär i filtreringskolumnen
-  filterCol.appendChild(showTitleForm); // Nytt formulär överst
+  filterCol.appendChild(showTitleForm);
+  filterCol.insertAdjacentHTML('beforeend', dividerHtml); //avdelare 
   filterCol.appendChild(timelineButton);
+  filterCol.insertAdjacentHTML('beforeend', dividerHtml); //avdelare
   filterCol.appendChild(filterForm);
 
   //skapar återställningskolumnen
